@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World!</string>
+    <string name="app_name">DeviceCreate</string>
+    <string name="Processor">Processor</string>
+    <string name="RAM">RAM</string>
+    <string name="ROM">ROM</string>
+    <string name="Additionally">Additionally</string>
+    <string name="Battery">Battery Capacity</string>
+    <string name="ManCoast">Manufacturing \ncoast</string>
+    <string name="Fincoast">Final coast</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Next">Next</string>
+    <string-array name="Processros">
+        <item >Proc1</item>
+        <item >Proc2</item>
+        <item >Proc3</item>
+        <item >Proc4</item>
+    </string-array>
+    <string-array name="ProcessorsPrice">
+        <item >12</item>
+        <item >32</item>
+        <item >45</item>
+        <item >57</item>
+    </string-array>
+    <string-array name="RAM">
+        <item >RAM1</item>
+        <item >RAM2</item>
+        <item >RAM3</item>
+        <item >RAM4</item>
+    </string-array>
+    <string-array name="RAMPrice">
+        <item >11</item>
+        <item >34</item>
+        <item >42</item>
+        <item >59</item>
+    </string-array>
+        <string-array name="ROM">
+        <item >ROM1</item>
+        <item >ROM2</item>
+        <item >ROM3</item>
+        <item >ROM4</item>
+    </string-array>
+    <string-array name="ROMPrice">
+        <item >11</item>
+        <item >34</item>
+        <item >42</item>
+        <item >59</item>
+    </string-array>
+            <string-array name="Additionally">
+        <item >Additionally1</item>
+        <item >Additionally2</item>
+        <item >Additionally3</item>
+        <item >Additionally4</item>
+    </string-array>
+    <string-array name="AdditionallyPrice">
+        <item >11</item>
+        <item >34</item>
+        <item >42</item>
+        <item >59</item>
+    </string-array>
+        <string-array name="Battery">
+        <item >Battery1</item>
+        <item >Battery2</item>
+        <item >Battery3</item>
+        <item >Battery4</item>
+    </string-array>
+    <string-array name="BatteryPrice">
+        <item >11</item>
+        <item >34</item>
+        <item >42</item>
+        <item >59</item>
+    </string-array>
+    <string name="Zero">0</string>
+
+</resources>
