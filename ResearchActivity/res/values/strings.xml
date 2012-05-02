@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, ResearchActivity!</string>
+    <string name="app_name">ResearchActivity</string>
+    <string name="btn1">FB</string>
+    <string name="btn2">SB</string>
+    <string name="btn0">ZB</string>
+    <string name="btn3">TB</string>
+    <string name="btn4">FhB</string>
+    <string name="btn5">FiveB</string>
+    <string name="btn6">SixB</string>
+    <string name="btn7">SevenB</string>
+    <string name="btn8">EB</string>
+    <string name="resBtn">Research</string>
+    <string name="cancel">Cancel</string>
+    <string name="resAct">ResearchActivity</string>
+
+</resources>
