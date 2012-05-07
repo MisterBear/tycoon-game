@@ -3,71 +3,76 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
-
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="4" >
-
+        android:layout_weight="6" >
+
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:text="@string/cancel" />
-
+            android:text="@string/cancel" />
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/researchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/button2"
+            android:layout_above="@+id/cancelButton"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:text="@string/resBtn" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="Medium Text"
+            android:text="@string/hellRes"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/button1"
+            android:layout_above="@+id/researchButton"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/textView1"
-            android:text="Small Text"
+            android:layout_below="@+id/textTitle"
+            android:text="@string/choose"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
-
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical" >
+        android:layout_weight="2" >
 
         <RelativeLayout
             android:id="@+id/mLay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2" >
-        </RelativeLayout>
-
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_above="@+id/textMoney"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" >
 
-    </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textMoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:text="@string/money"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </RelativeLayout>
 
 </LinearLayout>

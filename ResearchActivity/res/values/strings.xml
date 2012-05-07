@@ -15,5 +15,8 @@
     <string name="resBtn">Research</string>
     <string name="cancel">Cancel</string>
     <string name="resAct">ResearchActivity</string>
+    <string name="hellRes">Hello Researcher</string>
+    <string name="choose">Выберите интересуюющее вас исследование</string>
+    <string name="money">Money:</string>
 
 </resources>

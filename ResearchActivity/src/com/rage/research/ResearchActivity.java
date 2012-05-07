@@ -1,9 +1,11 @@
 package com.rage.research;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
@@ -16,24 +18,31 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 public class ResearchActivity extends Activity implements OnClickListener{
-	
-	//RelativeLayout.LayoutParams mParam; 
+	 
 	private RelativeLayout mLayout;
+	private TextView MoneyCount;
 	
 	private Draw2D BackGround;
 	
-	int height, widht, VAligin, HAligin;
-	int VLvlCount = 6;
-	int HLvlCount = 9;
+	static private int NOT_RESEARCHED = 0;
+	static private int CURRENT_RESEARCHED = 1;
+	static private int RESEARCHED = 2;
+	
+	
+	static private int DIALOG_CHAGE_RESEARCH = 1;
+	private AlertDialog alert;
+	
+	private int height, widht, VAligin, HAligin;
+	private int VLvlCount = 6;
+	private int HLvlCount = 9;
 	private  int NumberOfButtons;
-	
-	MyImageButton MyButtons[];
-	
-	/*MyImageButton HardButtons[];
-	MyImageButton SoftButtons[];
-	MyImageButton DesButtons[];*/
+
 	MyImageButton MyMasButtons[][];
-	MyImageButton GenButtons[];
+	ResearchInfo ResInfo;
+	private int CurrentResearching[] = new int [2];
+
+	private ResearchInfo Info;
+	private int Money;
 	
 	private int VLevel[];
 	private int HLevel[];
@@ -43,6 +52,9 @@ public class ResearchActivity extends Activity implements OnClickListener{
 	private int ActiveButtonType = -1;
 	
 	private Button ResBtn;
+	private TextView Title;
+	private TextView Description;
+	private int research[];
 
     /** Called when the activity is first created. */
     @Override
@@ -50,13 +62,40 @@ public class ResearchActivity extends Activity implements OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.research);
         
+        Log.v("HI", "HERE WE STARTED");
+        
         BackGround = new Draw2D(this);
         RelativeLayout.LayoutParams mParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT); 
         mLayout = (RelativeLayout) findViewById(R.id.mLay);
         mLayout.addView(BackGround, mParam);
         
-        ResBtn = (Button) findViewById(R.id.button1);
+        ResBtn = (Button) findViewById(R.id.researchButton);
         ResBtn.setOnClickListener(ResearchListener);
+        
+        research = new int [36];
+        CurrentResearching[0] = -1;
+        
+        //Title = (TextView)findViewById
+        
+        /*ResInfo = new ResearchInfo[4][];
+        for (int n = 0; n < 3; n++)
+        	ResInfo[n] = new ResearchInfo [11];
+        ResInfo[3] = new ResearchInfo [3];*/
+        Log.v("HELLO", "CONTINUE WORKING");
+        
+        Intent out = getIntent();
+        Bundle bundleMas=out.getExtras().getBundle("mas");
+        int size=bundleMas.getInt("StrArrays");
+        research = new int[size];
+        for(int n = 0; n < research.length; n++)
+        	research[n]=bundleMas.getInt("Array"+n);
+        
+        Info=(ResearchInfo)out.getSerializableExtra("someextra");
+        //ResInfo = (ResearchInfo)out.getSerializableExtra("ResInf");
+        Money = (int)out.getIntExtra("Money", 0);
+        MoneyCount = (TextView) findViewById(R.id.textMoney);
+        MoneyCount.setText(getString(R.string.money) + String.valueOf(Money));
+
     }
     
     @Override
@@ -84,110 +123,86 @@ public class ResearchActivity extends Activity implements OnClickListener{
            	HLevel[n] = addH + n * HAligin;
             
         NumberOfButtons = VLvlCount*HLvlCount - VLvlCount/2 - 3*(VLvlCount - 1);
-        MyButtons = new MyImageButton [NumberOfButtons];
         
-        MyMasButtons = new MyImageButton [3][NumberOfButtons/3 - 1];
-        GenButtons = new MyImageButton [3];
+        MyMasButtons = new MyImageButton [4][];
+        for (int n = 0; n < 3; n++)
+        	MyMasButtons[n] = new MyImageButton [NumberOfButtons/3 - 1];
+        MyMasButtons[3] = new MyImageButton [3];
         
         Log.v("pr ", String.valueOf(MyMasButtons[0].length));
         
-        int curBtn = 0;
-        for (int firstParam = 0; firstParam < 3; firstParam++, curBtn = 0)
-        	for (int secParam = 0; secParam < (NumberOfButtons/3 - 1); secParam++, curBtn++)
+        for (int firstParam = 0; firstParam < MyMasButtons.length; firstParam++)
+        	for (int secParam = 0; secParam < MyMasButtons[firstParam].length; secParam++)
+        		AlternativeCreateButton(firstParam, secParam);
+
+        for (int firstParam = 0; firstParam < MyMasButtons.length; firstParam++)
+        	for (int secParam = 0; secParam < MyMasButtons[firstParam].length; secParam++)
         	{
-        		Log.v("pr ", String.valueOf(curBtn));
-        		AlternativeCreateButton(firstParam, secParam, curBtn);
+        		if (MyMasButtons[firstParam][secParam].getResearch()== RESEARCHED)
+        			MyMasButtons[firstParam][secParam].setBackgroundColor(Color.BLACK);
+        		if (MyMasButtons[firstParam][secParam].getResearch()== CURRENT_RESEARCHED)
+        		{
+        			MyMasButtons[firstParam][secParam].setBackgroundColor(Color.YELLOW);
+        			CurrentResearching[0] = firstParam;
+        			CurrentResearching[1] = secParam;
+        		}
         	}
-        /*for (int VLVL = 0; VLVL < VLvlCount; VLVL++)
-       		for (int HLVL = 0; HLVL < HLvlCount; HLVL++)
-       			if (HLVL != 2 && HLVL != 5 && HLVL != 8)
-       			{
-       				if ((VLVL == 1 || VLVL == 3 || VLVL == 5) && HLVL == 0 )
-       					HLVL++;
-       				CreateButton(VLVL, HLVL, curBtn, false);
-       				curBtn++;
-       			}*/
-        for (int n = 0; n < 3; n++, curBtn++)
-        	CreateButton(0, 2 + n*3, curBtn);
+        		
     }
     
-    public void AlternativeCreateButton(int firstParam, int secParam, int curBtn)
+    public void AlternativeCreateButton(int firstParam, int secParam)
     {
-    	MyMasButtons[firstParam][secParam] = new MyImageButton(this, curBtn, firstParam);
+    	MyMasButtons[firstParam][secParam] = new MyImageButton(this, secParam, firstParam);
     	MyMasButtons[firstParam][secParam].setOnClickListener(this);
-		Log.v("CurrentButton ", String.valueOf(curBtn));
-    	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+    	MyMasButtons[firstParam][secParam].setResearch(research[11 * firstParam + secParam]);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
-    	
-    	if (secParam == 0)
-    		params.topMargin = VLevel[firstParam * 2] + VAligin - VAligin/2;
-    	else 
-    		if (secParam < 6)
-    			params.topMargin = VLevel[firstParam * 2];
-    		else
-    			params.topMargin = VLevel[firstParam * 2 + 1];
-    	
-    	ShapeDrawable w;
+		ShapeDrawable w;
     	w = new ShapeDrawable(new RectShape());
-    	
-    	w.setIntrinsicHeight(2*VAligin/3);
-    	MyMasButtons[firstParam][secParam].setMaxHeight(2*VAligin/3);
-    	
-    	w.setIntrinsicWidth(HAligin/3);
-    	MyMasButtons[firstParam][secParam].setMaxWidth(HAligin/2);
-    	
-    	//if (CheckButton(MyMasButtons[firstParam][secParam]))
-    	w.getPaint().setColor(Color.WHITE);
-    	//else w.getPaint().setColor(Color.BLACK);
+		if (firstParam != 3)
+		{
+	    	if (secParam == 0)
+	    		params.topMargin = VLevel[firstParam * 2] + VAligin - VAligin/2;
+	    	else 
+	    		if (secParam < 6)
+	    			params.topMargin = VLevel[firstParam * 2];
+	    		else
+	    			params.topMargin = VLevel[firstParam * 2 + 1];
+	    	int mod = 0;    	
+	    	if ((secParam > 1 && secParam < 4) || (secParam > 6 && secParam < 9))
+	    		mod = 1;
+	    	if ((secParam > 3 && secParam < 6) || (secParam > 8))
+	    		mod = 2;
+	
+	    	if (secParam < 6)
+	    		params.leftMargin = HLevel[secParam + mod];
+	    	else 
+	    		params.leftMargin = HLevel[secParam + mod - 5];
+	    	
+	    	w.setIntrinsicHeight(2*VAligin/3);
+	    	w.setIntrinsicWidth(HAligin/3);
+	    	
+	    	MyMasButtons[firstParam][secParam].setMaxHeight(2*VAligin/3);
+	    	MyMasButtons[firstParam][secParam].setMaxWidth(HAligin/2);
+		}
+		else
+		{
+	   		w.setIntrinsicHeight(VLevel[5] + 2*VAligin/3 - VLevel[0]);
+	   		
+	   		params.topMargin = VLevel[0];
+	   		params.leftMargin = HLevel[2 + secParam * 3];
+	   		
+	   		MyMasButtons[firstParam][secParam].setMaxHeight(VAligin*6);
+	    	w.setIntrinsicWidth(HAligin/3);
+	    	MyMasButtons[firstParam][secParam].setMaxWidth(HAligin/2);
+		}
+		
+		w.getPaint().setColor(Color.WHITE);
     	//MyButtons[curBtn].setBackgroundColor(Color.TRANSPARENT);
     	MyMasButtons[firstParam][secParam].setImageDrawable(w);
-    	
-    	int mod = 0;    	
-    	if ((secParam > 1 && secParam < 4) || (secParam > 6 && secParam < 9))
-    		mod = 1;
-    	if ((secParam > 3 && secParam < 6) || (secParam > 8))
-    		mod = 2;
-
-    	if (secParam < 6)
-    		params.leftMargin = HLevel[secParam + mod];
-    	else 
-    		params.leftMargin = HLevel[secParam + mod - 5];
-    	mLayout.addView(MyMasButtons[firstParam][secParam], params);
+		mLayout.addView(MyMasButtons[firstParam][secParam], params);
     }
                
-	public void CreateButton(int vlvl, int hlvl, int curBtn)
-    {
-		GenButtons[curBtn] = new MyImageButton(this, curBtn, 3);
-		GenButtons[curBtn].setOnClickListener(this);
-		Log.v("CurrentButton ", String.valueOf(curBtn));
-    	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-    	if (hlvl == 0)
-    		params.topMargin = VLevel[vlvl] + VAligin - VAligin/2;
-    	else 
-    		params.topMargin = VLevel[vlvl];
-    	
-    	ShapeDrawable w;
-    	w = new ShapeDrawable(new RectShape());
-   		w.setIntrinsicHeight(VLevel[5] + 2*VAligin/3 - VLevel[0]);
-   		params.topMargin = VLevel[0];
-   		GenButtons[curBtn].setMaxHeight(VAligin*6);
-    	
-    	w.setIntrinsicWidth(HAligin/3);
-    	GenButtons[curBtn].setMaxWidth(HAligin/2);
-    	
-    	//if (CheckButton(GenButtons[curBtn]))
-			w.getPaint().setColor(Color.WHITE);
-    	//else w.getPaint().setColor(Color.BLACK);
-    	
-    	//MyButtons[curBtn].setBackgroundColor(Color.TRANSPARENT);
-    	GenButtons[curBtn].setImageDrawable(w);
-
-    	
-    	params.leftMargin = HLevel[2 + curBtn * 3];
-    	mLayout.addView(GenButtons[curBtn], params);
-    }
-	
 	public Boolean CheckButton(MyImageButton checkBtn)
 	{
 		int type = checkBtn.getType();
@@ -203,10 +218,10 @@ public class ResearchActivity extends Activity implements OnClickListener{
 					return MyMasButtons[type][0].getResearched();
 				case 2:
 				case 7:
-					return GenButtons[0].getResearched();
+					return MyMasButtons[3][0].getResearched();
 				case 4:
 				case 9:
-					return GenButtons[1].getResearched();
+					return MyMasButtons[3][1].getResearched();
 				default:
 					return MyMasButtons[type][number-1].getResearched();
 			}
@@ -250,92 +265,93 @@ public class ResearchActivity extends Activity implements OnClickListener{
 		}
 	}
 	
-	/*public void CreateButton(int vlvl, int hlvl, int curBtn, Boolean genBtn)
-    {
-		MyButtons[curBtn] = new MyImageButton(this, curBtn);
-		MyButtons[curBtn].setOnClickListener(this);
-		Log.v("CurrentButton ", String.valueOf(curBtn));
-    	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-    	if (hlvl == 0)
-    		params.topMargin = VLevel[vlvl] + VAligin - VAligin/2;
-    	else 
-    		params.topMargin = VLevel[vlvl];
-    	
-    	ShapeDrawable w;
-    	w = new ShapeDrawable(new RectShape());
-    	
-    	if (!genBtn)
-    	{
-	    	w.setIntrinsicHeight(2*VAligin/3);
-	    	MyButtons[curBtn].setMaxHeight(2*VAligin/3);
-    	}
-    	else 
-    	{
-    		w.setIntrinsicHeight(VLevel[5] + 2*VAligin/3 - VLevel[0]);
-    		params.topMargin = VLevel[0];
-    		MyButtons[curBtn].setMaxHeight(VAligin*6);
-    	}
-    	
-    	w.setIntrinsicWidth(HAligin/3);
-    	MyButtons[curBtn].setMaxWidth(HAligin/2);
-    	
-    	w.getPaint().setColor(Color.WHITE);
-    	//MyButtons[curBtn].setBackgroundColor(Color.TRANSPARENT);
-    	MyButtons[curBtn].setImageDrawable(w);
-
-    	
-    	params.leftMargin = HLevel[hlvl];
-    	mLayout.addView(MyButtons[curBtn], params);
-    }*/
-
 	public OnClickListener ResearchListener = new OnClickListener() {
 		
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			//MyImageButton btn = (MyImageButton)v;
-			Log.v("HERE WE CRASHED", "CRASH");
+			
 			if (ActiveButtonNumber != -1)
 			{
-				/*TextView textTitle = (TextView) findViewById(R.id.textView1);
-				textTitle.setText("Private");
 				
-				TextView textDescription = (TextView) findViewById(R.id.textView2);
-				textDescription.setText("Private");*/
-				//Drawable w;
-				if (ActiveButtonType != 3)
-				{
-					MyMasButtons[ActiveButtonType][ActiveButtonNumber].setBackgroundColor(Color.BLACK);
-					MyMasButtons[ActiveButtonType][ActiveButtonNumber].setResearching(true);
+				if (CurrentResearching[0] == -1)
+				{//MyMasButtons[ActiveButtonType][ActiveButtonNumber].setBackgroundColor(Color.BLACK);
+				
+				//info = new ResearchInfo(MyMasButtons[ActiveButtonType][ActiveButtonNumber]);
+				
+				//Money -= MyMasButtons[ActiveButtonType][ActiveButtonNumber].getCost();
+				//MoneyCount.setText(getString(R.string.money) + String.valueOf(Money));
+				
+				ReturnResult();
+				
 				}
-					
 				else
 				{
-					GenButtons[ActiveButtonNumber].setBackgroundColor(Color.BLACK);
-					GenButtons[ActiveButtonNumber].setResearching(true);
+					CreateDialog();
+					alert.show();
 				}
-			
-				/*ResearchInfo info = new ResearchInfo(MyMasButtons[ActiveButtonType][ActiveButtonNumber]);
-				Intent in = new Intent();
-				in.putExtra("extra2", info);
-		        setResult(1,in);
-		        finish();*/
 			}
 		}
 	};
 	
+	private void ReturnResult()
+	{
+		ResearchInfo info;
+		MyMasButtons[ActiveButtonType][ActiveButtonNumber].setResearch(CURRENT_RESEARCHED);
+		info = new ResearchInfo(MyMasButtons[ActiveButtonType][ActiveButtonNumber]);
+		Intent in = new Intent();
+		in.putExtra("extra2", info);
+        setResult(1,in);
+        finish();
+	}
+	
+	private void CreateDialog()
+	{
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("“екущий прогресс будет утер€н если вы начнете новое иссследование. ѕродолжить?")
+	       .setCancelable(false)
+	       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   MyMasButtons[CurrentResearching[0]][CurrentResearching[1]].setResearch(NOT_RESEARCHED);
+	        	   ReturnResult();
+	        	   ResearchActivity.this.finish();
+	        	    
+	           }
+	       })
+	       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	                dialog.cancel();
+	           }
+	       });
+	alert = builder.create();
+	}
+	
+	/*protected Dialog onCreateDialog(int id) {
+	    Dialog dialog;
+	    switch(id) {
+	    case DIALOG_CHAGE_RESEARCH:
+	        // do the work to define the pause Dialog
+	        break;
+	    case DIALOG_GAMEOVER_ID:
+	        // do the work to define the game over Dialog
+	        break;
+	    default:
+	        dialog = null;
+	    }
+	    return dialog;
+	}*/
+	
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		MyImageButton btn = (MyImageButton)v;
-		TextView textTitle = (TextView) findViewById(R.id.textView1);
-		//textTitle.setText(btn.getTitle());
+		TextView textTitle = (TextView) findViewById(R.id.textTitle);
 		
-		TextView textDescription = (TextView) findViewById(R.id.textView2);
-		textDescription.setText(btn.getDescription());
+		TextView textDescription = (TextView) findViewById(R.id.textDescription);
+		textDescription.setText(btn.getDescription() + "\nCost:" + btn.getCost() + "\nWorkSize:" + btn.getWorkSize());
 		ActiveButtonNumber = btn.getNumber();
 		ActiveButtonType = btn.getType();
-		textTitle.setText(String.valueOf(ActiveButtonNumber));
-		if (!CheckButton(btn))	
+		textTitle.setText(btn.getTitle());
+		if (!CheckButton(btn) || btn.getCost() > Money)	
 			ResBtn.setEnabled(false);
 		else ResBtn.setEnabled(true);
 		}
