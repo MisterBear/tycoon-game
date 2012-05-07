@@ -12,56 +12,50 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class createdevice1 extends Activity {
+public class createdevice2 extends Activity {
     /** Called when the activity is first created. */
-	int manmul,requestCode;
+	int manmul;
 	int FinCoast,ManCoast;		   //То что возратим
 	final Context content = this;
-	Button proc,ram,rom,addit,battery,next,cancel;
+	Button OS,Keypad,Display,Color,Material,next,cancel;
 	TextView FinText,ManText;
-	
 	Resources res; 
+	device recievedevicedata;
 	data recivedata;
 	int[] PriviesClick=new int[10];
-	//TODO что пока все не выбрал нельзя было нажать нехт или пока цена не зеленая
-	//TODO разобратся с поп бонусом сейчас неверное считает
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.createdevice1);
+        setContentView(R.layout.createdevice2);
         Intent out =getIntent();
         recivedata=(data)out.getSerializableExtra("Device Terms");
-    
-        
-      
-        proc=(Button)findViewById(R.id.button1);
-        proc.setOnClickListener(ProcButton);
-        ram=(Button)findViewById(R.id.button2);
-        ram.setOnClickListener(RamButton);
-        rom=(Button)findViewById(R.id.button3);
-        rom.setOnClickListener(RomButton);
-        addit=(Button)findViewById(R.id.button4);
-        addit.setOnClickListener(AdditButton);
-        battery=(Button)findViewById(R.id.button5);
-        battery.setOnClickListener(BatteryButton);
+        recievedevicedata=(device)out.getSerializableExtra("Device param");
+        FinCoast=out.getIntExtra("Final coast", 0);
+        ManCoast=out.getIntExtra("Man coast", 0); 
+        OS=(Button)findViewById(R.id.button1);
+        OS.setOnClickListener(OSButton);
+        Keypad=(Button)findViewById(R.id.button2);
+        Keypad.setOnClickListener(KeypadButton);
+        Display=(Button)findViewById(R.id.button3);
+        Display.setOnClickListener(DisplayButton);
+        Color=(Button)findViewById(R.id.button4);
+        Color.setOnClickListener(ColorButton);
+        Material=(Button)findViewById(R.id.button5);
+        Material.setOnClickListener(MaterialButton);
         next=(Button)findViewById(R.id.button6);
         next.setOnClickListener(NextButton);
         cancel=(Button)findViewById(R.id.button7);
         cancel.setOnClickListener(CancelButton);
         ManText=(TextView)findViewById(R.id.textView2);
         FinText=(TextView)findViewById(R.id.textView4);
-        requestCode=2;
-        FinCoast=0;
-        ManCoast=0;
         manmul=150;
         res = getResources();
         ManText.setTextColor(res.getColor(R.color.green));
+        UpdateCoast();
     }
-    private OnClickListener ProcButton = new OnClickListener()  
+    private OnClickListener OSButton = new OnClickListener()  
     {      
     public void onClick(View v)  
     {
@@ -70,36 +64,37 @@ public class createdevice1 extends Activity {
     		FinCoast-=PriviesClick[0];
     		ManCoast-=PriviesClick[1];
     	}
-    	final CharSequence[] Processors;
+    	final CharSequence[] OSes;
 		final CharSequence[] Price; 
     	
-    	Processors = res.getTextArray(R.array.Processros);
-    	Price=res.getTextArray(R.array.ProcessorsPrice);
-    	int n=recivedata.getgeneration()*2;
+		OSes = res.getTextArray(R.array.OS);
+    	Price=res.getTextArray(R.array.OSPrice);
+    	int n=recivedata.getgeneration();
     	final CharSequence[] items= new CharSequence[n];
     	if (recivedata.getgeneration()>1)
     	{
     		for (int i=0;i<n;i++)
     			{
-    				items[i]=Processors[(recivedata.getgeneration()-1)*2+i-2].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i-2].toString();  
+    				items[i]=OSes[(recivedata.getgeneration()-1)+i-1].toString()+"         :"+Price[(recivedata.getgeneration()-1)+i-1].toString();  
     			}
     	}
     	else
     	{
     		for (int i=0;i<n;i++)
 			{
-				items[i]=Processors[(recivedata.getgeneration()-1)*2+i].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i].toString();  
+				items[i]=OSes[(recivedata.getgeneration()-1)+i].toString()+"         :"+Price[(recivedata.getgeneration()-1)+i].toString();  
 			}
     	}
     		
     	AlertDialog.Builder builder = new AlertDialog.Builder(content);
 		// set title
-		builder.setTitle("Pick a processor");
+		builder.setTitle("Pick a operating system");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
-		        proc.setText(Processors[item]);
+		    	OS.setText(OSes[item]);
 		        PriviesClick[0]=FinCoast;
 		        FinCoast+=Integer.parseInt((String) Price[item]);
+		        FinCoast-=(FinCoast*(recivedata.getPriceBonus()/100));
 		        PriviesClick[0]=FinCoast-PriviesClick[0];
 		        ManCoast+=Integer.parseInt((String) Price[item])*manmul;
 		        PriviesClick[1]=Integer.parseInt((String) Price[item])*manmul;
@@ -111,7 +106,7 @@ public class createdevice1 extends Activity {
     	};  
     
     };
-    private OnClickListener RamButton = new OnClickListener()  
+    private OnClickListener KeypadButton = new OnClickListener()  
     {      
     public void onClick(View v)  
     {
@@ -120,36 +115,37 @@ public class createdevice1 extends Activity {
     		FinCoast-=PriviesClick[2];
     		ManCoast-=PriviesClick[3];
     	}
-    	final CharSequence[] RAM;
+    	final CharSequence[] KEYPAD;
 		final CharSequence[] Price; 
     	Resources res = getResources(); 
-    	RAM = res.getTextArray(R.array.RAM);
-    	Price=res.getTextArray(R.array.RAMPrice);
+    	KEYPAD = res.getTextArray(R.array.Keypad);
+    	Price=res.getTextArray(R.array.KeypadPrice);
     	int n=recivedata.getgeneration()*2;
     	final CharSequence[] items= new CharSequence[n];
     	if (recivedata.getgeneration()>1)
     	{
     		for (int i=0;i<n;i++)
     			{
-    				items[i]=RAM[(recivedata.getgeneration()-1)*2+i-2].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i-2].toString();  
+    				items[i]=KEYPAD[(recivedata.getgeneration()-1)*2+i-2].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i-2].toString();  
     			}
     	}
     	else
     	{
     		for (int i=0;i<n;i++)
 			{
-				items[i]=RAM[(recivedata.getgeneration()-1)*2+i].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i].toString();  
+				items[i]=KEYPAD[(recivedata.getgeneration()-1)*2+i].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i].toString();  
 			}
     	}
     		
     	AlertDialog.Builder builder = new AlertDialog.Builder(content);
 		// set title
-		builder.setTitle("Pick a RAM");
+		builder.setTitle("Pick a keypad");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
-		        ram.setText(RAM[item]);
+		        Keypad.setText(KEYPAD[item]);
 		        PriviesClick[2]=FinCoast;
 		        FinCoast+=Integer.parseInt((String) Price[item]);
+		        FinCoast-=(FinCoast*(recivedata.getPriceBonus()/100));
 		        PriviesClick[2]=FinCoast-PriviesClick[2];
 		        ManCoast+=Integer.parseInt((String) Price[item])*manmul;
 		        PriviesClick[3]=Integer.parseInt((String) Price[item])*manmul;
@@ -161,7 +157,7 @@ public class createdevice1 extends Activity {
     };  
     };
     
-    private OnClickListener RomButton = new OnClickListener()  
+    private OnClickListener DisplayButton = new OnClickListener()  
     {      
     public void onClick(View v)  
     {
@@ -170,36 +166,37 @@ public class createdevice1 extends Activity {
     		FinCoast-=PriviesClick[4];
     		ManCoast-=PriviesClick[5];
     	}
-    	final CharSequence[] ROM;
+    	final CharSequence[] DISPLAY;
 		final CharSequence[] Price; 
     	Resources res = getResources(); 
-    	ROM = res.getTextArray(R.array.ROM);
-    	Price=res.getTextArray(R.array.ROMPrice);
+    	DISPLAY = res.getTextArray(R.array.Display);
+    	Price=res.getTextArray(R.array.DisplayPrice);
     	int n=recivedata.getgeneration()*2;
     	final CharSequence[] items= new CharSequence[n];
     	if (recivedata.getgeneration()>1)
     	{
     		for (int i=0;i<n;i++)
     			{
-    				items[i]=ROM[(recivedata.getgeneration()-1)*2+i-2].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i-2].toString();  
+    				items[i]=DISPLAY[(recivedata.getgeneration()-1)*2+i-2].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i-2].toString();  
     			}
     	}
     	else
     	{
     		for (int i=0;i<n;i++)
 			{
-				items[i]=ROM[(recivedata.getgeneration()-1)*2+i].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i].toString();  
+				items[i]=DISPLAY[(recivedata.getgeneration()-1)*2+i].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i].toString();  
 			}
     	}
     		
     	AlertDialog.Builder builder = new AlertDialog.Builder(content);
 		// set title
-		builder.setTitle("Pick a ROM");
+		builder.setTitle("Pick a display");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
-		        rom.setText(ROM[item]);
+		    	Display.setText(DISPLAY[item]);
 		        PriviesClick[4]=FinCoast;
 		        FinCoast+=Integer.parseInt((String) Price[item]);
+		        FinCoast-=(FinCoast*(recivedata.getPriceBonus()/100));
 		        PriviesClick[4]=FinCoast-PriviesClick[4];
 		        ManCoast+=Integer.parseInt((String) Price[item])*manmul;
 		        PriviesClick[5]=Integer.parseInt((String) Price[item])*manmul;
@@ -211,7 +208,7 @@ public class createdevice1 extends Activity {
     };  
     };
     
-    private OnClickListener AdditButton = new OnClickListener()  
+    private OnClickListener ColorButton = new OnClickListener()  
     {      
     public void onClick(View v)  
     {
@@ -220,36 +217,28 @@ public class createdevice1 extends Activity {
     		FinCoast-=PriviesClick[6];
     		ManCoast-=PriviesClick[7];
     	}
-    	final CharSequence[] Additionally;
+    	final CharSequence[] COLOR;
 		final CharSequence[] Price; 
     	Resources res = getResources(); 
-    	Additionally = res.getTextArray(R.array.Additionally);
-    	Price=res.getTextArray(R.array.AdditionallyPrice);
+    	COLOR = res.getTextArray(R.array.Color);
+    	Price=res.getTextArray(R.array.ColorPrice);
     	int n=recivedata.getgeneration()*2;
     	final CharSequence[] items= new CharSequence[n];
-    	if (recivedata.getgeneration()>1)
-    	{
-    		for (int i=0;i<n;i++)
+     	for (int i=0;i<n;i++)
     			{
-    				items[i]=Additionally[(recivedata.getgeneration()-1)*2+i-2].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i-2].toString();  
+    				items[i]=COLOR[recivedata.getgeneration()].toString()+"         :"+Price[recivedata.getgeneration()].toString();  
     			}
-    	}
-    	else
-    	{
-    		for (int i=0;i<n;i++)
-			{
-				items[i]=Additionally[(recivedata.getgeneration()-1)*2+i].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i].toString();  
-			}
-    	}
+    	
     		
     	AlertDialog.Builder builder = new AlertDialog.Builder(content);
 		// set title
-		builder.setTitle("Pick a processor");
+		builder.setTitle("Pick a color");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
-		    	addit.setText(Additionally[item]);
+		    	Color.setText(COLOR[item]);
 		        PriviesClick[6]=FinCoast;
 		        FinCoast+=Integer.parseInt((String) Price[item]);
+		        FinCoast-=(FinCoast*(recivedata.getPriceBonus()/100));
 		        PriviesClick[6]=FinCoast-PriviesClick[6];
 		        ManCoast+=Integer.parseInt((String) Price[item])*manmul;
 		        PriviesClick[7]=Integer.parseInt((String) Price[item])*manmul;
@@ -261,7 +250,7 @@ public class createdevice1 extends Activity {
     };  
     };
     
-    private OnClickListener BatteryButton = new OnClickListener()  
+    private OnClickListener MaterialButton = new OnClickListener()  
     {      
     public void onClick(View v)  
     {
@@ -270,36 +259,37 @@ public class createdevice1 extends Activity {
     		FinCoast-=PriviesClick[8];
     		ManCoast-=PriviesClick[9];
     	}
-    	final CharSequence[] Battery;
+    	final CharSequence[] MATERIAL;
 		final CharSequence[] Price; 
     	Resources res = getResources(); 
-    	Battery = res.getTextArray(R.array.Battery);
-    	Price=res.getTextArray(R.array.BatteryPrice);
+    	MATERIAL = res.getTextArray(R.array.Material);
+    	Price=res.getTextArray(R.array.MaterialPrice);
     	int n=recivedata.getgeneration()*2;
     	final CharSequence[] items= new CharSequence[n];
     	if (recivedata.getgeneration()>1)
     	{
     		for (int i=0;i<n;i++)
     			{
-    				items[i]=Battery[(recivedata.getgeneration()-1)*2+i-2].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i-2].toString();  
+    				items[i]=MATERIAL[(recivedata.getgeneration()-1)*2+i-2].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i-2].toString();  
     			}
     	}
     	else
     	{
     		for (int i=0;i<n;i++)
 			{
-				items[i]=Battery[(recivedata.getgeneration()-1)*2+i].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i].toString();  
+				items[i]=MATERIAL[(recivedata.getgeneration()-1)*2+i].toString()+"         :"+Price[(recivedata.getgeneration()-1)*2+i].toString();  
 			}
     	}
     		
     	AlertDialog.Builder builder = new AlertDialog.Builder(content);
 		// set title
-		builder.setTitle("Pick a processor");
+		builder.setTitle("Pick a material");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
-		        battery.setText(Battery[item]);
+		        Material.setText(MATERIAL[item]);
 		        PriviesClick[8]=FinCoast;
 		        FinCoast+=Integer.parseInt((String) Price[item]);
+		        FinCoast-=(FinCoast*(recivedata.getPriceBonus()/100));
 		        PriviesClick[8]=FinCoast-PriviesClick[8];
 		        ManCoast+=Integer.parseInt((String) Price[item])*manmul;
 		        PriviesClick[9]=Integer.parseInt((String) Price[item])*manmul;
@@ -315,35 +305,41 @@ public class createdevice1 extends Activity {
     {      
     public void onClick(View v)  
     {
-    	Intent i = new Intent(content,createdevice2.class);   
-        device DataForSecondActivity = new device(proc.getText().toString(),ram.getText().toString(),rom.getText().toString(),addit.getText().toString(),battery.getText().toString());
-    	i.putExtra("Device param", DataForSecondActivity);
-    	i.putExtra("Device Terms", recivedata);
-    	i.putExtra("Final coast", FinCoast);
-    	i.putExtra("Man coast", ManCoast);
-        startActivityForResult(i, requestCode);
+    	AlertDialog.Builder builder = new AlertDialog.Builder(content);
+    	builder.setMessage("Popularity to final coast:\nWithout popularity bonus: "+Integer.toString(FinCoast)+" \nWith popularity bonus: "+Integer.toString((int)(FinCoast+FinCoast*((double)recivedata.getPriceBonus()/100))))
+    	       .setCancelable(false)
+    	       .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int id) 
+    	           {
+    	        	dialog.cancel();
+    	        	FinCoast=(int) (FinCoast+FinCoast*((double)recivedata.getPriceBonus()/100));
+    	           	Intent in = new Intent();
+    	            recievedevicedata.setOS(OS.getText().toString());
+    	            recievedevicedata.setColor(Color.getText().toString());
+    	            recievedevicedata.setDisplay(Display.getText().toString());
+    	            recievedevicedata.setKeypad(Keypad.getText().toString());
+    	            recievedevicedata.setMaterial(Material.getText().toString());
+    	            in.putExtra("Final coast", FinCoast);
+    	        	in.putExtra("Man coast", ManCoast);
+    	            in.putExtra("Device param", recievedevicedata);
+    	            setResult(2,in);
+    	            finish();
+    	           }
+    	       });
+    	AlertDialog alert = builder.create();
+    	alert.show();
+
     };  
     };
     
     private OnClickListener CancelButton = new OnClickListener()  
     {      
     public void onClick(View v)  
-    {
-       finish();
+    {    
+    	finish();
     };  
     };
     
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       // TODO Auto-generated method stub
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==2)
-        {
-        	setResult(1,data);
-        	finish();
-        }
-        
-    }
     private void UpdateCoast()
     {
     	ManText.setText(Integer.toString(ManCoast));

@@ -60,7 +60,7 @@
         <item >42</item>
         <item >59</item>
     </string-array>
-        <string-array name="Battery">
+    <string-array name="Battery">
         <item >Battery1</item>
         <item >Battery2</item>
         <item >Battery3</item>
@@ -72,6 +72,74 @@
         <item >42</item>
         <item >59</item>
     </string-array>
+    <string-array name="OS">
+        <item >OS1</item>
+        <item >OS2</item>
+        <item >OS3</item>
+        <item >OS4</item>
+    </string-array>
+    <string-array name="OSPrice">
+        <item >11</item>
+        <item >34</item>
+        <item >42</item>
+        <item >59</item>
+    </string-array>
+        <string-array name="Keypad">
+        <item >Keypad1</item>
+        <item >Keypad2</item>
+        <item >Keypad3</item>
+        <item >Keypad4</item>
+    </string-array>
+    <string-array name="KeypadPrice">
+        <item >11</item>
+        <item >34</item>
+        <item >42</item>
+        <item >59</item>
+    </string-array>
+            <string-array name="Display">
+        <item >Display1</item>
+        <item >Display2</item>
+        <item >Display3</item>
+        <item >Display4</item>
+    </string-array>
+    <string-array name="DisplayPrice">
+        <item >11</item>
+        <item >34</item>
+        <item >42</item>
+        <item >59</item>
+    </string-array>
+                <string-array name="Color">
+        <item >Color1</item>
+        <item >Color2</item>
+        <item >Color3</item>
+        <item >Color4</item>
+    </string-array>
+    <string-array name="ColorPrice">
+        <item >10</item>
+        <item >10</item>
+        <item >20</item>
+        <item >20</item>
+    </string-array>
+                    <string-array name="Material">
+        <item >Material1</item>
+        <item >Material2</item>
+        <item >Material3</item>
+        <item >Material4</item>
+    </string-array>
+    <string-array name="MaterialPrice">
+        <item >10</item>
+        <item >10</item>
+        <item >20</item>
+        <item >20</item>
+    </string-array>
     <string name="Zero">0</string>
+    <string name="Create">Create</string>
+    <color name="green">#66ff33</color>
+    <color name="red">#990000</color>
+    <string name="Display">Display</string>
+    <string name="Keypad">Keypad</string>
+    <string name="OS">OS</string>
+    <string name="Color">Color</string>
+    <string name="Material">Case material</string>
 
 </resources>
