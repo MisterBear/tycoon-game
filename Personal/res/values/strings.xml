@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, PersonalActivity!</string>
+    <string name="app_name">Personal</string>
+    <string name="Engineer">Engineer</string>
+    <string name="Programmer">Programmer</string>
+    <string name="Designer">Designer</string>
+    <string name="Personal">Personal</string>
+    <string name="Staff">Staff:</string>
+    <string name="Null">0</string>
+    <string name="Slash">/</string>
+    <string name="HireButton">Hire</string>
+    <string name="Fire">Fire</string>
+    <string name="Plus">+</string>
+    <string name="Minus">-</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Work">In work:</string>
+
+</resources>
