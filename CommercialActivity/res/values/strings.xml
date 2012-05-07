@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Commercial</string>
+    <string name="Cancel">Cancel</string>
+        <string-array name="Name">
+        <item >Some name #1</item>
+        <item >Some name #2</item>
+        <item >Some name #3</item>
+        <item >Some name #4</item>
+        <item >Some name #5</item>
+        <item >Some name #6</item>
+        <item >Some name #7</item>
+        <item >Some name #8</item>
+        <item >Some name #9</item>
+    </string-array>
+    <string-array name="Description">
+        <item >Some description #1</item>
+        <item >Some description #2</item>
+        <item >Some description #3</item>
+        <item >Some description #4</item>
+        <item >Some description #5</item>
+        <item >Some description #6</item>
+        <item >Some description #7</item>
+        <item >Some description #8</item>
+        <item >Some description #9</item>
+    </string-array>
+ <string-array name="BonusNumb">
+        <item >2</item>
+        <item >3</item>
+        <item >5</item>
+        <item >7</item>
+        <item >2</item>
+        <item >8</item>
+        <item >5</item>
+        <item >8</item>
+        <item >4</item>
+    </string-array>
+    <string-array name="Bonus">
+        <item >Duration of the sale</item>
+        <item >Price Bonus</item>
+        <item >volume of sales</item>
+    </string-array>
+</resources>
